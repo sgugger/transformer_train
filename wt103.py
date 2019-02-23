@@ -14,10 +14,7 @@ config['embed_p'] = 0.1
 config['ff_p'] = 0.1
 config['resid_p'] = 0.1
 
-save = partial(SaveModelCallback, every='epoch', name='tfmer12')
-learn = language_model_learner(data, TransformerXL, config=config, pretrained=False, clip=None, alpha=0, beta=2, callback_fns=save)
+learn = language_model_learner(data, TransformerXL, config=config, pretrained=False, clip=None, alpha=0, beta=2)
 learn = learn.to_fp16(clip=0.1, dynamic=True)
 learn.fit(1, 5e-4)
 
-learn.save('tfmer12_wt103')
-pickle.dump(data.vocab.itos, open(path/'itos_tfm12.pkl', 'wb'))
