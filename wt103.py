@@ -33,10 +33,13 @@ all_texts = np.concatenate([valid, train])
 df = pd.DataFrame({'texts':all_texts})
 df.head()
 
-data = (TextList.from_df(df, path, cols='texts')
+df['texts'] = df['texts'].apply(lambda x:[BOS] + x.split(' '))
+processor = [NumericalizeProcessor(min_freq=0)]
+
+data = (TextList.from_df(df, path, cols='texts', processor=processor)
                 .split_by_idx(range(0,60))
                 .label_for_lm()
-                .databunch(bs=8, bptt=150))
+                .databunch(bs=5, bptt=150))
 
 config = tfmerXL_lm_config.copy()
 config['output_p'] = 0.1
